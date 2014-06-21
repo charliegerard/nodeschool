@@ -1,11 +1,17 @@
-var mymodule = require('./filtered_ls.js');
+var fs = require('fs');
+var path = require('path');
 
-module.exports = fs.readdir(process.argv[2], function callback(err, list){
+module.exports = function (filepath, ext, callback) {
 
-	ext = ('.'+process.argv[3]);
-	for(i = 0; i <= list.length; i++){
-		if (path.extname(list[i]) == ext){
-		console.log(list[i])
+	fs.readdir(filepath, function (err, list){
+
+		// var ext = ('.'+process.argv[3]);
+		if (err){
+			return callback(err);
 		}
-	}
-});
+		list = list.filter(function(filename){
+			return path.extname(filename) == '.'+ext
+		})
+		callback(null,list)
+	});
+};
